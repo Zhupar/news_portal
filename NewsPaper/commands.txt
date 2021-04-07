@@ -1,0 +1,73 @@
+from django.contrib.auth.models import User
+from news.models import *
+
+Создать двух пользователей (с помощью метода User.objects.create_user)
+user1 = User.objects.create_user(username='Sarah')
+user2 = User.objects.create_user(username='Dan')
+
+Создать два объекта модели Author, связанные с пользователями
+author1=Author.objects.create(author=user1)
+author2=Author.objects.create(author=user2)
+
+Добавить 4 категории в модель Category
+category1=Category.objects.create(category='Новости мира')
+category2=Category.objects.create(category='Экономика')
+category3=Category.objects.create(category='Культура')
+category4=Category.objects.create(category='Медицина')
+
+Добавить 2 статьи и 1 новость
+article1=Post.objects.create(post_author=author1, post_choice=Post.news, post_title='Title1', post_text='Post_text', post_rating=5)
+article2=Post.objects.create(post_author=author2, post_choice=Post.article, post_title = 'Title2', post_text='Post text2', post_rating=4)
+news1=Post.objects.create(post_author=author2, post_choice=Post.news, post_title = 'Title3', post_text='Post text3', post_rating=2)
+
+Присвоить им категории (как минимум в одной статье/новости должно быть не меньше 2 категорий)
+article1.post_category.add(category1)
+article1.post_category.add(category2)
+article2.post_category.add(category3)
+article2.post_category.add(category4)
+news1.post_category.add(category1)
+news1.post_category.add(category4)
+
+Создать как минимум 4 комментария к разным объектам модели Post (в каждом объекте должен быть как минимум один комментарий)
+com1=Comment.objects.create(com_post=article1, com_user=user1, com_text='Text1', com_rating=3)
+com2=Comment.objects.create(com_post=article2, com_user=user2, com_text='Text2', com_rating=5)
+com3=Comment.objects.create(com_post=news1,com_user=user1,com_text='Text3', com_rating=5)
+com4=Comment.objects.create(com_post=article1,com_user=user2, com_text='Text4', com_rating=1)
+
+Применяя функции like() и dislike() к статьям/новостям и комментариям, скорректировать рейтинги этих объектов
+com1.com_like()
+com2.com_like()
+com3.com_like()
+com4.com_like()
+com1.com_dislike()
+com2.com_dislike()
+com3.com_dislike()
+com4.com_dislike()
+article1.post_like()
+article2.post_like()
+news1.post_like()
+article1.post_dislike()
+article2.post_dislike()
+news1.post_dislike()
+
+Обновить рейтинги пользователей
+author1.update_rating()
+author2.update_rating()
+
+Вывести username и рейтинг лучшего пользователя (применяя сортировку и возвращая поля первого объекта)
+first = Author.objects.all().order_by('-author_rating').first()
+first.author.username, first.author_rating
+
+Вывести дату добавления, username автора, рейтинг, заголовок и превью лучшей статьи, основываясь на лайках/дислайках к этой статье
+best =Post.objects.all().order_by('-post_rating').first()
+best.post_date_time.strftime("%d-%b-%Y (%H:%M:%S.%f)"), best.post_rating, best.post_title, best.preview()
+
+
+Вывести все комментарии (дата, пользователь, рейтинг, текст) к этой статье
+com_best=Comment.objects.filter(com_post=best)
+for i in com_best:
+    i.com_date_time.strftime("%d-%b-%Y (%H:%M:%S.%f)"), i.com_user, i.com_rating, i.com_text
+
+
+
+
