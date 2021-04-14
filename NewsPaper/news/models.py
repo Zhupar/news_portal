@@ -45,7 +45,7 @@ class Post(models.Model):
     post_rating = models.IntegerField(default=0)
 
     def __str__(self):
-        return self.post_title
+        return self.post_text
 
     def post_like(self):
         self.post_rating += 1
@@ -56,7 +56,7 @@ class Post(models.Model):
         self.save()
 
     def preview(self):
-        return self.post_text[:124] + '...'
+        return str(self.post_text[:124] + '...')
 
 
 class PostCategory(models.Model):

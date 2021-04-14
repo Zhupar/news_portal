@@ -60,7 +60,7 @@ first.author.username, first.author_rating
 
 Вывести дату добавления, username автора, рейтинг, заголовок и превью лучшей статьи, основываясь на лайках/дислайках к этой статье
 best =Post.objects.all().order_by('-post_rating').first()
-best.post_date_time.strftime("%d-%b-%Y (%H:%M:%S.%f)"), best.post_rating, best.post_title, best.preview()
+best.post_date_time.strftime("%d-%b-%Y (%H:%M:%S.%f)"), best.post_rating, best.post_title, str(best.preview())
 
 
 Вывести все комментарии (дата, пользователь, рейтинг, текст) к этой статье

@@ -1,0 +1,27 @@
+{% extends 'flatpages/default.html'%}
+
+{% load custom_filters %}
+
+{% block title %}
+News
+{% endblock title %}
+
+<!-- В контенте на странице мы выводим все товары -->
+{% block content %}
+<div class="h3 p-3 mb-2 bg-secondary text-white">All news</div>
+<p class = "text-muted">Статей на сайте: {{ news|length}}</p>
+<br/>
+{% if news %}
+    {% for post in news%}
+    <h3 class = "text-center fw-light">{{ post.post_title|censor }}</h3>
+    <p class="lh-sm">{{ post.post_text|censor|truncatewords:50  }}</p>
+
+    <hr>
+    {% endfor %}
+
+    {% else %}
+<h2> Постов нет </h2>
+{% endif %}
+
+
+{% endblock content %}
