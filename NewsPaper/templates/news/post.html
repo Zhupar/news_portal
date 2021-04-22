@@ -1,4 +1,4 @@
-{% extends 'flatpages/default.html' %}
+{% extends 'news/default.html' %}
 {% load custom_filters %}
 {% block title %}
 News
@@ -8,4 +8,8 @@ News
     <div class="h3 p-3 mb-2 bg-secondary text-white">{{ post.post_title|censor }}</div>
     <p class="text-end"><small>{{ post.post_date_time }}</small></p>
     <p class="lh-sm">{{ post.post_text|censor }}</p>
+
+    <a href="{% url 'edit' post.id %}">Редактировать</a>
+    <a href="{% url 'delete' post.id %}">Удалить</a>
+    <a href="{% url 'news' %}">Назад</a>
 {% endblock content %}
