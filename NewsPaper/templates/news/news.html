@@ -8,6 +8,28 @@ News
 
 <!-- В контенте на странице мы выводим все товары -->
 {% block content %}
+{% if request.user.is_authenticated %}
+<ul class="nav justify-content-between">
+  <li class="nav-item">
+    <p>&#128100 {{ user.username}}</p>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="accounts/logout/">Выйти</a>
+  </li>
+</ul>
+{% if is_not_author %}
+<button> <a class="nav-link" href="/upgrade/"> Стать автором!</a> </button>
+{% endif %}
+    {% else %}
+<ul class="nav justify-content-end">
+    <li class="nav-item">
+    <a class="nav-link" href="accounts/login/">Войти</a>
+    </li>
+</ul>
+{% endif %}
+
+
+
 <div class="h3 p-3 mb-2 bg-secondary text-white">All news</div>
 <p class = "text-muted">Статей на сайте: {{ news|length}}</p>
 <br/>

@@ -1,7 +1,14 @@
 # from django.shortcuts import render
 from datetime import datetime
-
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import TemplateView
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.shortcuts import redirect
+from django.contrib.auth.models import Group
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.views.generic.base import View
+
 from .models import Post, Category
 from .filters import PostFilter
 from .forms import PostForm
@@ -33,6 +40,7 @@ class NewsList(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['time_now'] = datetime.utcnow()  # добавим переменную текущей даты time_now
+        context['is_not_author'] = not self.request.user.groups.filter(name='authors').exists()
         return context
 
 
@@ -43,14 +51,16 @@ class PostDetail(DetailView):
     context_object_name = 'post'  # название объекта. в нём будет
 
 
-class PostCreateView(CreateView):
+class PostCreateView(PermissionRequiredMixin, CreateView):
     template_name = 'news/create.html'
     form_class = PostForm
+    permission_required = ('news.add_post',)
 
 
-class PostUpdateView(UpdateView):
+class PostUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     template_name = 'news/create.html'
     form_class = PostForm
+    permission_required = ('news.change_post',)
 
     # метод get_object мы используем вместо queryset, чтобы получить информацию об объекте который мы собираемся редактировать
     def get_object(self, **kwargs):
@@ -61,3 +71,13 @@ class PostDeleteView(DeleteView):
     template_name = 'news/delete.html'
     queryset = Post.objects.all()
     success_url = '/news/'
+
+
+@login_required
+def upgrade_me(request):
+    user = request.user
+    authors_group = Group.objects.get(name='authors')
+    if not request.user.groups.filter(name='authors').exists():
+        authors_group.user_set.add(user)
+    return redirect('/')
+
