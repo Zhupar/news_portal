@@ -70,7 +70,7 @@ class PostUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
 class PostDeleteView(DeleteView):
     template_name = 'news/delete.html'
     queryset = Post.objects.all()
-    success_url = '/news/'
+    success_url = '/'
 
 
 @login_required
@@ -80,4 +80,7 @@ def upgrade_me(request):
     if not request.user.groups.filter(name='authors').exists():
         authors_group.user_set.add(user)
     return redirect('/')
+
+
+
 

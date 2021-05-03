@@ -48,7 +48,7 @@ class Post(models.Model):
         return self.post_text
 
     def get_absolute_url(self):  # добавим абсолютный путь чтобы после создания нас перебрасывало на страницу с товаром
-        return f'/news/{self.id}'
+        return f'/{self.id}'
 
     def post_like(self):
         self.post_rating += 1
